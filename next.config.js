@@ -1,8 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var nextConfig = {
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
+// next.config.js
+const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
-exports.default = nextConfig;
+
+module.exports = nextConfig;
