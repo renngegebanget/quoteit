@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { useProgressStore } from '../../store/useStore'
 
 export default function Progress() {
-  let [average, setAverage] = useState({
+  const [average, setAverage] = useState({
     mood: 0,
     stress: 0,
     energy: 0,

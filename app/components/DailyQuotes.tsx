@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Marck_Script } from 'next/font/google'
 import { FaRegHeart, FaHeart } from 'react-icons/fa' // FontAwesome
 import { MdDownload } from 'react-icons/md' // Material Design
@@ -53,10 +53,7 @@ export default function DailyQuotes() {
       console.log(err)
     }
   }
-  const handleFav = () => {
-    const filtered = favorites.filter((item) => item.q === 'hello')
-    
-  }
+  
   const isFav =
     favorites.filter((item) => item.q === quote.q).length !== 0 ? (
       <FaHeart className='text-2xl cursor-pointer text-red-500' onClick={() => removeFavorite(quote.q)} />
