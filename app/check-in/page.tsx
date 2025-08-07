@@ -78,7 +78,7 @@ export default function CheckIn() {
       <Navbar />
       <div className='mb-4'>
         <h1 className='text-4xl font-bold'>Daily Check-in</h1>
-        <p className='text-gray-700'>Take a moment to reflect on how you're feeling today. Your responses help track your mental wellness journey.</p>
+        <p className='text-gray-700'>Take a moment to reflect on how you&apos;re feeling today. Your responses help track your mental wellness journey.</p>
       </div>
       <div className='grid md:grid-cols-2 gap-4'>
         {renderRadioGroup('How do you feel your mood?', 'mood')}

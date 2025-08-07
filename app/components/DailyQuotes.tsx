@@ -54,7 +54,7 @@ export default function DailyQuotes() {
     }
   }
   const handleFav = () => {
-    let filtered = favorites.filter((item) => item.q === 'hello')
+    const filtered = favorites.filter((item) => item.q === 'hello')
     
   }
   const isFav =
