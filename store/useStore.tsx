@@ -1,23 +1,30 @@
+// @ts-nocheck
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-export const useQuoteStore = create()(
+type QuoteStore = {
+  quote: any
+  setQuote: (data: any) => void
+  hasHydrated: boolean
+  setHasHydrated: () => void
+}
+
+export const useQuoteStore = create<QuoteStore>()(
   persist(
     (set) => ({
       quote: null,
-      setQuote: (data) => set((state) => ({ quote: data })),
+      setQuote: (data) => set(() => ({ quote: data })),
       hasHydrated: false,
       setHasHydrated: () => set({ hasHydrated: true }),
     }),
     {
       name: 'quote-storage',
       onRehydrateStorage: () => (state) => {
-        state.setHasHydrated()
+        state?.setHasHydrated?.()
       },
     },
   ),
 )
-
 export const useFavoritesStore = create()(
   persist(
     (set) => ({
@@ -63,8 +70,8 @@ export const useProgressStore = create(
 
         uniqueDates.sort((a, b) => a - b)
 
-        let streak = 1
-        let maxStreak = 1
+        let streak = 0
+        let maxStreak = 0
 
         for (let i = 1; i < uniqueDates.length; i++) {
           const prev = uniqueDates[i - 1]
@@ -80,6 +87,25 @@ export const useProgressStore = create(
         }
 
         return maxStreak
+      },
+      deleteProgres: (data) => {
+        set((state) => {
+          const today = new Date()
+          const date = new Date(data.date)
+
+          const isToday = date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() === today.getDate()
+
+          if (isToday) {
+            return {
+              progress: state.progress.filter((item) => {
+                const itemDate = new Date(item.date)
+                return !(itemDate.getFullYear() === date.getFullYear() && itemDate.getMonth() === date.getMonth() && itemDate.getDate() === date.getDate())
+              }),
+            }
+          }
+
+          return state
+        })
       },
 
       addProgress: (data) => {

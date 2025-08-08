@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Navbar from './components/Navbar'
 import DailyQuotes from './components/DailyQuotes'
 import Progress from './components/Progress'

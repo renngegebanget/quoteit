@@ -1,11 +1,13 @@
+// @ts-nocheck
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Marck_Script } from 'next/font/google'
 import { FaRegHeart, FaHeart } from 'react-icons/fa' // FontAwesome
 import { MdDownload } from 'react-icons/md' // Material Design
 import { IoSyncOutline } from 'react-icons/io5' // Ionicons versi 5
-
+import Modal from '@/components/Modal'
+import DownloadQuote from '@/components/DownloadQuote'
 
 //zustand
 import { useQuoteStore, useFavoritesStore } from '../../store/useStore'
@@ -16,7 +18,8 @@ const marck = Marck_Script({
 })
 
 export default function DailyQuotes() {
-  
+  const [downloadModal, setDownloadModal] = useState(false)
+
   const quote = useQuoteStore((state) => state.quote)
   const hasHydrated = useQuoteStore((state) => state.hasHydrated)
   const setQuote = useQuoteStore((state) => state.setQuote)
@@ -41,8 +44,6 @@ export default function DailyQuotes() {
     getQuote()
   }, [hasHydrated, quote, setQuote])
 
-  
-
   const handleRestartQuote = async () => {
     try {
       const res = await fetch('/api/quote')
@@ -53,7 +54,7 @@ export default function DailyQuotes() {
       console.log(err)
     }
   }
-  
+
   const isFav =
     favorites.filter((item) => item.q === quote.q).length !== 0 ? (
       <FaHeart className='text-2xl cursor-pointer text-red-500' onClick={() => removeFavorite(quote.q)} />
@@ -76,9 +77,14 @@ export default function DailyQuotes() {
       <br></br>
       <div className='flex items-center justify-evenly mx-auto'>
         <IoSyncOutline className='text-2xl cursor-pointer' onClick={handleRestartQuote} />
-        <MdDownload className='text-2xl' />
+        <MdDownload onClick={() => setDownloadModal(true)} className='text-2xl' />
         {isFav}
       </div>
+      {downloadModal && (
+        <Modal onClose={() => setDownloadModal(true)}>
+          <DownloadQuote />
+        </Modal>
+      )}
     </div>
   )
 }

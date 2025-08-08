@@ -1,7 +1,10 @@
+// @ts-nocheck
+
 'use client'
 import { useState, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import Modal from '@/components/Modal'
+import Entri from '@/components/Entri'
 import ImportProgress from '@/components/ImportProgress'
 import Link from 'next/link'
 import { useProgressStore } from '../../store/useStore'
@@ -13,9 +16,17 @@ export default function Progress() {
     energy: 0,
   })
   const [showModal, setShowModal] = useState(false)
+  const [showEntriModal, setShowEntriModal] = useState(false)
+  const [entri, setEntri] = useState(null)
+  const [dayStreak, setDayStreak] = useState(0)
+
   const progress = useProgressStore((state) => state.progress)
+  const deleteProgres = useProgressStore((state) => state.deleteProgres)
   const entries = progress.length
 
+  useEffect(() => {
+    setDayStreak(useProgressStore.getState().streak())
+  }, [progress])
   useEffect(() => {
     const jsbsb = () => {
       let totalMood = 0
@@ -77,7 +88,7 @@ export default function Progress() {
             <p>Total Entries</p>
           </div>
           <div className='p-4 w-1/2 text-center rounded-xl shadow-md hover:shadow-xl'>
-            <h2 className='text-3xl font-semibold text-green-500'>0</h2>
+            <h2 className='text-3xl font-semibold text-green-500'>{dayStreak}</h2>
             <p>Day Streak</p>
           </div>
         </div>
@@ -98,7 +109,7 @@ export default function Progress() {
           <br></br>
           <div>
             <div className='justify-between flex  items-center'>
-              <h2 className='text-xl font-semibold text-gray-700'>Energy</h2>
+              <h2 className='text-xl font-semibold text-gray-700'>Average Energy</h2>
               <h2 className='text-xl font-semibold text-gray-400'>{average.energy}/10</h2>
             </div>
             <div className='w-full h-3 bg-gray-300 rounded-xl flex items-start mt-2'>
@@ -122,10 +133,10 @@ export default function Progress() {
         <div className='w-full flex items-center justify-between'>
           <h3 className='text-2xl font-semibold'>Recent Entries</h3>
           <div className='w-1/2 items-end'>
-            <button onClick={handleDownload} className='w-1/2 p-2 text-center shadow-md font-semibold rounded-xl'>
+            <button onClick={handleDownload} className='w-1/2 p-2 text-center shadow-md font-semibold rounded-xl cursor-pointer'>
               Export
             </button>
-            <button className='w-1/2 p-2 text-center shadow-md font-semibold rounded-xl' onClick={() => setShowModal(true )}>
+            <button className='w-1/2 p-2 text-center shadow-md font-semibold rounded-xl cursor-pointer' onClick={() => setShowModal(true)}>
               Import
             </button>
           </div>
@@ -133,7 +144,14 @@ export default function Progress() {
         {progress.length !== 0 ? (
           <div className='mt-4 gap-4'>
             {progress.map((progres) => (
-              <div className='w-full my-3 p-6 shadow rounded-xl flex flex-wrap md:flex-nowrap' key={progres.date}>
+              <div
+                className='w-full my-3 p-6 shadow rounded-xl flex flex-wrap md:flex-nowrap cursor-pointer'
+                key={progres.date}
+                onClick={() => {
+                  setEntri(progres)
+                  setShowEntriModal(true)
+                }}
+              >
                 <div className='w-full flex justify-between'>
                   <div>
                     <h4 className='text-xl font-semibold text-gray-900'>{new Date(progres.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</h4>
@@ -146,11 +164,7 @@ export default function Progress() {
                     <h5 className='text-lg font-medium text-gray-500'>stress:&nbsp;&nbsp;{progres.stress}/10</h5>
                   </div>
                 </div>
-                {progres.notes.trim() === '' ? (
-                  ''
-                ) : (
-                  <input className='block md:hidden border w-full text-gray-700 p-3 mt-2 rounded-xl' value={progres.notes} disable='true' readOnly />
-                )}
+                {progres.notes.trim() === '' ? '' : <input className='block md:hidden border w-full text-gray-700 p-3 mt-2 rounded-xl' value={progres.notes} disable='true' readOnly />}
               </div>
             ))}
           </div>
@@ -161,16 +175,31 @@ export default function Progress() {
 
       <div className='flex flex-col w-full my-24 gap-4'>
         <Link href='/check-in'>
-          <button className='w-full p-4 text-center shadow-md font-semibold rounded-xl text-white bg-purple-400'>New Check-in</button>
+          <button className='w-full p-4 text-center shadow-md font-semibold rounded-xl text-white bg-purple-400 cursor-pointer'>New Check-in</button>
         </Link>
         <Link href='/'>
-          <button className='w-full py-4 font-semibold rounded-md shadow-sm'>Back To Home</button>
+          <button className='w-full py-4 font-semibold rounded-md shadow-sm cursor-pointer'>Back To Home</button>
         </Link>
       </div>
-      {showModal && <Modal onClose={() => setShowModal(false)} >
-        
-      <ImportProgress />
-      </Modal>}
+      {showModal && (
+        <Modal onClose={() => setShowModal(false)}>
+          <ImportProgress />
+        </Modal>
+      )}
+      {showEntriModal && (
+        <Modal
+          onClose={() => {
+            setShowEntriModal(false)
+            setEntri(null)
+          }}
+        >
+          <Entri entri={entri} deleteProgres={() =>{
+            deleteProgres(entri)
+            setEntri(null)
+            setShowEntriModal(false)
+          }} />
+        </Modal>
+      )}
     </div>
   )
 }

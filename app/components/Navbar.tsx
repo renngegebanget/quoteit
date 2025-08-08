@@ -1,23 +1,35 @@
+// @ts-nocheck
 'use client'
 
 import Link from 'next/link'
-import { useThemeStore } from '../../store/useStore'
+import { useThemeStore, useFavoritesStore } from '../../store/useStore'
 import { useState } from 'react'
+import Modal from '@/components/Modal'
 import { FaMoon } from 'react-icons/fa'
 import { MdSunny } from 'react-icons/md'
 import { HiXMark, HiBars3 } from 'react-icons/hi2'
+import { Marck_Script } from 'next/font/google'
 import { usePathname } from 'next/navigation'
 
+const marck = Marck_Script({
+    subsets: ['latin'],
+    weight: '400',
+  })
+  
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [showFavoritesModal, setShowFavoritesModal] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const pathname = usePathname()
+  
 
-const getClassName = (pathname, currentPath) => {
-  return pathname === currentPath ? 'rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white' : 'px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-700 hover:text-white';}
+  const getClassName = (pathname, currentPath) => {
+    return pathname === currentPath ? 'rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white' : 'px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-700 hover:text-white'
+  }
 
   const theme = useThemeStore((state) => state.theme)
   const toggleTheme = useThemeStore((state) => state.toggleTheme)
+  const favorites = useFavoritesStore((state) => state.favorites)
 
   const toggleMenu = () => setMenuOpen((prev) => !prev)
   const toggleDropdown = () => setDropdownOpen((prev) => !prev)
@@ -46,7 +58,7 @@ const getClassName = (pathname, currentPath) => {
                 <Link href='/' className={getClassName(pathname, '/')}>
                   Dashboard
                 </Link>
-                <Link href='/api/quotes' className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-700 hover:text-white">
+                <Link href='/api/quotes' className='rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-700 hover:text-white'>
                   Quotes
                 </Link>
                 <Link href='/progress' className={getClassName(pathname, '/progress')}>
@@ -55,6 +67,10 @@ const getClassName = (pathname, currentPath) => {
                 <Link href='/check-in' className={getClassName(pathname, '/check-in')}>
                   Check-in
                 </Link>
+                <button onClick={() => setShowFavoritesModal(true)} className='relative px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-700 hover:text-white'>
+                  Favorites
+                  <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full h-4 w-4 flex justify-center items-center'>{favorites.length}</span>
+                </button>
               </div>
             </div>
           </div>
@@ -86,8 +102,27 @@ const getClassName = (pathname, currentPath) => {
             <Link href='/check-in' className='block rounded-md px-3 py-2 text-base font-medium text-gray-600 hover:bg-gray-700 hover:text-white'>
               Check-in
             </Link>
+            <button className='relative px-3 py-2 text-base font-medium text-gray-600 hover:bg-gray-700 hover:text-white'>
+              Favorites
+              <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full h-4 w-4 flex justify-center items-center'>{favorites.length}</span>
+            </button>
           </div>
         </div>
+      )}
+      {showFavoritesModal && (
+        <Modal onClose={() => setShowFavoritesModal(false)}>
+          {favorites &&
+            favorites.map((favorite) => {
+              return (
+                <div key={favorite.q} className='w-full md:w-1/2 p-6 bg-gray-50 rounded-xl text-center max-w-sm md:max-w-none mx-auto md:mx-none mb-2'>
+                  <h3 className={`text-3xl font-semibold`}>&ldquo;{favorite?.q}&rdquo;</h3>
+                  <br></br>
+                  <p className={marck.className}>&mdash;{favorite?.a}</p>
+                  <br></br>
+                </div>
+              )
+            })}
+        </Modal>
       )}
     </nav>
   )

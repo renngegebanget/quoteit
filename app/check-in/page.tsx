@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 'use client'
 import { useState } from 'react'
 import Navbar from '@/components/Navbar'
@@ -7,7 +9,7 @@ import { useRouter } from 'next/navigation'
 
 export default function CheckIn() {
   const router = useRouter()
-  const addProgress = useProgressStore((state) => state.addProgress)
+  const addProgress = useProgressStore((state: any) => state.addProgress)
 
   const [form, setForm] = useState({
     mood: 5,
@@ -91,9 +93,9 @@ export default function CheckIn() {
             <textarea name='notes' value={form.notes} onChange={handleChange} placeholder="What's on your mind today?" className='w-full p-2 border border-gray-300 rounded-md' />
           </div>
           <div className='flex flex-col w-full my-24 gap-4'>
-              <button className='w-full p-4 text-white font-semibold rounded-md bg-purple-400 shadow-md' onClick={handleCompleteCheckIn}>
-                Complete Check-in
-              </button>
+            <button className='w-full p-4 text-white font-semibold rounded-md bg-purple-400 shadow-md' onClick={handleCompleteCheckIn}>
+              Complete Check-in
+            </button>
             <Link href='/'>
               <button className='w-full p-4 text-center shadow-md font-semibold rounded-xl'>Back To Home</button>
             </Link>
