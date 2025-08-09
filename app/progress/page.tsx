@@ -143,10 +143,10 @@ export default function Progress() {
         </div>
         {progress.length !== 0 ? (
           <div className='mt-4 gap-4'>
-            {progress.map((progres) => (
+            {progress.map((progres, id) => (
               <div
                 className='w-full my-3 p-6 shadow rounded-xl flex flex-wrap md:flex-nowrap cursor-pointer'
-                key={progres.date}
+                key={id}
                 onClick={() => {
                   setEntri(progres)
                   setShowEntriModal(true)

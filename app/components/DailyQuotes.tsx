@@ -81,8 +81,8 @@ export default function DailyQuotes() {
         {isFav}
       </div>
       {downloadModal && (
-        <Modal onClose={() => setDownloadModal(true)}>
-          <DownloadQuote />
+        <Modal onClose={() => setDownloadModal(false)}>
+          <DownloadQuote quote={quote?.q} author={quote?.a}/>
         </Modal>
       )}
     </div>

@@ -1,11 +1,17 @@
 // @ts-nocheck
 'use client'
+
 export default function Entri({ entri, deleteProgres }) {
+  const today = new Date()
+  const date = new Date(entri.date)
+
+  const isToday = date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() === today.getDate()
+
   return (
     <div>
       <ul>
         <li>
-          <p>Date:&nbsp;&nbsp;{entri.date}/10</p>
+          <p>Date:&nbsp;&nbsp;{new Date(entri.date).toString()}</p>
         </li>
         <li>
           <p>Mood:&nbsp;&nbsp;{entri.mood}/10</p>
@@ -21,11 +27,15 @@ export default function Entri({ entri, deleteProgres }) {
             <p>Notes:&nbsp;&nbsp;{entri.notes}</p>
           </li>
         )}
-        <li>
-          <p>
-            <button onClick={deleteProgres} >Delete this entri</button>
-          </p>
-        </li>
+        {isToday && (
+          <li>
+            <p>
+              <button className='text-blue-500' onClick={deleteProgres}>
+                Delete this entri
+              </button>
+            </p>
+          </li>
+        )}
       </ul>
     </div>
   )

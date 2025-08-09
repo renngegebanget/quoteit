@@ -97,10 +97,9 @@ export const useProgressStore = create(
 
           if (isToday) {
             return {
-              progress: state.progress.filter((item) => {
-                const itemDate = new Date(item.date)
-                return !(itemDate.getFullYear() === date.getFullYear() && itemDate.getMonth() === date.getMonth() && itemDate.getDate() === date.getDate())
-              }),
+              progress: state.progress.filter(
+          (item) => new Date(item.date).getTime() !== date.getTime()
+        ),
             }
           }
 

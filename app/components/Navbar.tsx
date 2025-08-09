@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useThemeStore, useFavoritesStore } from '../../store/useStore'
 import { useState } from 'react'
 import Modal from '@/components/Modal'
+import Favorites from '@/components/Favorites'
 import { FaMoon } from 'react-icons/fa'
 import { MdSunny } from 'react-icons/md'
 import { HiXMark, HiBars3 } from 'react-icons/hi2'
@@ -12,16 +13,15 @@ import { Marck_Script } from 'next/font/google'
 import { usePathname } from 'next/navigation'
 
 const marck = Marck_Script({
-    subsets: ['latin'],
-    weight: '400',
-  })
-  
+  subsets: ['latin'],
+  weight: '400',
+})
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [showFavoritesModal, setShowFavoritesModal] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const pathname = usePathname()
-  
 
   const getClassName = (pathname, currentPath) => {
     return pathname === currentPath ? 'rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white' : 'px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-700 hover:text-white'
@@ -111,17 +111,11 @@ export default function Navbar() {
       )}
       {showFavoritesModal && (
         <Modal onClose={() => setShowFavoritesModal(false)}>
-          {favorites &&
-            favorites.map((favorite) => {
-              return (
-                <div key={favorite.q} className='w-full md:w-1/2 p-6 bg-gray-50 rounded-xl text-center max-w-sm md:max-w-none mx-auto md:mx-none mb-2'>
-                  <h3 className={`text-3xl font-semibold`}>&ldquo;{favorite?.q}&rdquo;</h3>
-                  <br></br>
-                  <p className={marck.className}>&mdash;{favorite?.a}</p>
-                  <br></br>
-                </div>
-              )
-            })}
+          {favorites && favorites.length === 0
+            ? 'no quotes was favorited'
+            : favorites.map((favorite, id) => {
+                return <Favorites key={id} favorite={favorite} />
+              })}
         </Modal>
       )}
     </nav>

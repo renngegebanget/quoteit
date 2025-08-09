@@ -18,7 +18,7 @@ export default function Modal({ onClose, children }) {
 
   return (
     <div className='fixed inset-0 flex items-center justify-center bg-black/50'>
-      <div ref={modalRef} className='max-w-sm md:max-w-none w-[80%] mx-auto bg-white p-4 rounded flex flex-col max-h-[80vh]'>
+      <div ref={modalRef} className='max-w-sm md:max-w-none w-[80%] mx-auto bg-white p-4 rounded-lg flex flex-col max-h-[80vh]'>
         <div className='w-full flex justify-between flex-shrink-0'>
           <div></div>
           <HiXMark className="text-xl" onClick={onClose}/>
